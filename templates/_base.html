@@ -4,23 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZochovaMed</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
 
-<header>
-    <h1>Zochova Medication</h1>
-</header>
+<!-- NAVIGATION BAR -->
+<nav class="navbar">
+    <div class="title-and-logo" >
+        <a href="/"><img src="static\img\logo.png" alt="logo"></a>
+        <h1>
+            <a href="/">Zochova Medication</a>
+        </h1>
+    </div>
 
-<!-- NAVIGATION -->
-<!-- <nav>
     <ul>
-        <li><a href="/">Domov</a></li>
-        <li><a href="/clanky">Články</a></li>
-        <li><a href="/onas">O nás</a></li>
-        <li><a href="/profil">Profil</a></li>
+        <li><a href="/services">Services</a></li>
+        <li><a href="/doctors">Doctors</a></li>
+        <li><a href="/schedule">Schedule</a></li>
+        <li><a href="/news">News</a></li>
     </ul>
-</nav> -->
+</nav>
 
 <main>
     {% block content %}

@@ -1,0 +1,27 @@
+{% extends '_base.html' %}
+{% block content %}
+    <h1>Potvrdenie termínov</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color:red;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    {% if sessions %}
+        {% for session in sessions %}
+            <div class="session-box">
+                <p><strong>Pacient:</strong> {{ session.patient.firstname }} {{ session.patient.lastname }}</p>
+                <p><strong>Dátum:</strong> {{ session.date }}</p>
+                <p><strong>Čas:</strong> {{ session.time }}</p>
+                <p><strong>Popis problému:</strong> {{ session.description }}</p>
+                <form action="{{ url_for('confirm_session', session_id=session.id) }}" method="POST">
+                    <button type="submit">Potvrdiť</button>
+                </form>
+            </div>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>Žiadne čakajúce rezervácie.</p>
+    {% endif %}
+{% endblock %}

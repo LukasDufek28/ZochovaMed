@@ -1,7 +1,29 @@
 {% extends '_base.html' %}
-
 {% block content %}
-<div class="content">
-    <h2>News</h2>
-</div>
+    <h1>Novinky</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: green;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    {% if current_user.role == 'doktor' %}
+        <h2>Pridať nový článok</h2>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <p>{{ form.title.label }} {{ form.title }}</p>
+            <p>{{ form.content.label }} {{ form.content }}</p>
+            <p>{{ form.submit }}</p>
+        </form>
+    {% endif %}
+    <h2>Články</h2>
+    {% for article in articles %}
+        <div class="article">
+            <h3>{{ article.title }}</h3>
+            <p>{{ article.content }}</p>
+            <p><em>Autor: {{ article.author.firstname }} {{ article.author.lastname }}</em></p>
+        </div>
+        <hr>
+    {% endfor %}
 {% endblock %}

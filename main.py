@@ -1,24 +1,161 @@
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template, redirect, url_for, request, flash
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from forms import NewsForm, ReservationForm, SessionRecordForm
+from models import db, User, Session, News
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your-secret-key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+# Vytvorenie databázy a testovacích používateľov
+with app.app_context():
+    db.create_all()
+    if not User.query.filter_by(email="doktor@test.com").first():
+        doctor = User(firstname="Jan", lastname="Doktor", email="doktor@test.com", password_hash=generate_password_hash("heslo123"), role="doktor")
+        patient = User(firstname="Peter", lastname="Pacient", email="pacient@test.com", password_hash=generate_password_hash("heslo123"), role="pacient")
+        db.session.add(doctor)
+        db.session.add(patient)
+        db.session.commit()
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email=email).first()
+        if user and check_password_hash(user.password_hash, password):
+            login_user(user)
+            return redirect(url_for('main_page'))
+        flash('Nesprávny email alebo heslo.')
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 @app.route('/')
-def home():
-    return render_template('index.html')
+@login_required
+def main_page():
+    if current_user.role == 'doktor':
+        sessions = Session.query.filter_by(doctor_id=current_user.id, valid=True).filter(Session.diagnosis.is_(None), Session.medication.is_(None)).order_by(Session.date).all()
+    else:
+        sessions = Session.query.filter_by(patient_id=current_user.id, valid=True).filter(Session.diagnosis.is_(None), Session.medication.is_(None)).order_by(Session.date).all()
+    return render_template('main.html', sessions=sessions)
 
-@app.route('/doctors')
-def doctors():
-    return render_template('doctors.html')
-
-@app.route('/services')
-def services():
-    return render_template('services.html')
-
-@app.route('/schedule')
-def schedule():
-    return render_template('schedule.html')
-
-@app.route('/news')
+@app.route('/news', methods=['GET', 'POST'])
+@login_required
 def news():
-    return render_template('news.html')
+    form = NewsForm()
+    if form.validate_on_submit() and current_user.role == 'doktor':
+        news = News(title=form.title.data, content=form.content.data, author_id=current_user.id)
+        db.session.add(news)
+        db.session.commit()
+        flash('Článok pridaný.')
+        form.title.data = ''  # Vyčistenie formulára
+        form.content.data = ''
+    articles = News.query.order_by(News.id.desc()).all()
+    return render_template('news.html', form=form, articles=articles)
+
+@app.route('/reservation', methods=['GET', 'POST'])
+@login_required
+def reservation():
+    if current_user.role != 'pacient':
+        return redirect(url_for('main_page'))
+    form = ReservationForm()
+    form.doctor.choices = [(d.id, f"{d.firstname} {d.lastname}") for d in User.query.filter_by(role='doktor').all()]
+    if form.validate_on_submit():
+        selected_date = form.date.data
+        selected_time_str = form.time.data
+        today = datetime.now().date()
+
+        if selected_date < today:
+            flash('Nemôžete rezervovať termín v minulosti.')
+        elif selected_date.weekday() >= 5:
+            flash('Rezervovať môžete iba pracovné dni (pondelok - piatok).')
+        else:
+            selected_time = datetime.strptime(selected_time_str, '%H:%M').time()
+            session = Session(
+                doctor_id=form.doctor.data,
+                patient_id=current_user.id,
+                date=selected_date,
+                time=selected_time,
+                description=form.description.data
+            )
+            db.session.add(session)
+            db.session.commit()
+            flash('Rezervácia odoslaná.')
+            form.date.data = None  # Vyčistenie formulára
+            form.time.data = ''
+            form.description.data = ''
+    return render_template('reservation.html', form=form)
+
+@app.route('/confirm', methods=['GET', 'POST'])
+@login_required
+def confirm():
+    if current_user.role != 'doktor':
+        return redirect(url_for('main_page'))
+    sessions = Session.query.filter_by(doctor_id=current_user.id, valid=False).all()
+    return render_template('confirm.html', sessions=sessions)
+
+@app.route('/confirm_session/<int:session_id>', methods=['POST'])
+@login_required
+def confirm_session(session_id):
+    if current_user.role != 'doktor':
+        return redirect(url_for('main_page'))
+    session = Session.query.get_or_404(session_id)
+    if session.doctor_id != current_user.id:
+        flash('Nemôžete potvrdiť tento termín.')
+    else:
+        session.valid = True
+        db.session.commit()
+        flash('Termín bol potvrdený.')
+    sessions = Session.query.filter_by(doctor_id=current_user.id, valid=False).all()
+    return render_template('confirm.html', sessions=sessions)
+
+@app.route('/session_record/<int:session_id>', methods=['GET', 'POST'])
+@login_required
+def session_record(session_id):
+    if current_user.role != 'doktor':
+        return redirect(url_for('main_page'))
+    session = Session.query.get_or_404(session_id)
+    form = SessionRecordForm()
+    if form.validate_on_submit():
+        session.diagnosis = form.diagnosis.data
+        session.medication = form.medication.data
+        db.session.commit()
+        flash('Zápis odoslaný.')
+        form.diagnosis.data = ''  # Vyčistenie formulára
+        form.medication.data = ''
+    return render_template('session_record.html', form=form, session=session)
+
+@app.route('/pickup', methods=['GET', 'POST'])
+@login_required
+def pickup():
+    if current_user.role != 'pacient':
+        return redirect(url_for('main_page'))
+    if request.method == 'POST':
+        session_id = request.form['session_id']
+        session = Session.query.get_or_404(session_id)
+        if session.patient_id == current_user.id:
+            db.session.delete(session)
+            db.session.commit()
+            flash('Liek vyzdvihnutý.')
+    sessions = Session.query.filter_by(patient_id=current_user.id).filter(Session.diagnosis.isnot(None), Session.medication.isnot(None)).all()
+    return render_template('pickup.html', sessions=sessions)
+
+if __name__ == '__main__':
+    app.run(debug=True)

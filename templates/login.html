@@ -1,0 +1,17 @@
+{% extends '_base.html' %}
+{% block content %}
+    <h1>Prihlásenie</h1>
+    <form method="POST">
+        <p>
+            <label for="email">Email:</label><br>
+            <input type="email" name="email" id="email" required>
+        </p>
+        <p>
+            <label for="password">Heslo:</label><br>
+            <input type="password" name="password" id="password" required>
+        </p>
+        <p>
+            <button type="submit">Prihlásiť sa</button>
+        </p>
+    </form>
+{% endblock %}

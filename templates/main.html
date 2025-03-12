@@ -1,0 +1,12 @@
+{% extends '_base.html' %}
+{% block content %}
+    <h1>Vaše sedenia</h1>
+    {% for session in sessions %}
+        <div>
+            <p>{{ session.date }} {{ session.time }} - {{ session.doctor.firstname }} {{ session.doctor.lastname }}</p>
+            {% if current_user.role == 'doktor' %}
+                <a href="{{ url_for('session_record', session_id=session.id) }}">Zápis zo sedenia</a>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}

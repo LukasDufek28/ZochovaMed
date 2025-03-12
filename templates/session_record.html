@@ -1,0 +1,19 @@
+{% extends '_base.html' %}
+{% block content %}
+    <h1>Zápis zo sedenia</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: green;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <p><strong>Pacient:</strong> {{ session.patient.firstname }} {{ session.patient.lastname }}</p>
+    <p><strong>Dátum:</strong> {{ session.date }} {{ session.time }}</p>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>{{ form.diagnosis.label }} {{ form.diagnosis }}</p>
+        <p>{{ form.medication.label }} {{ form.medication }}</p>
+        <p>{{ form.submit }}</p>
+    </form>
+{% endblock %}

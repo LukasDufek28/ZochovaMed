@@ -1,0 +1,19 @@
+{% extends '_base.html' %}
+{% block content %}
+    <h1>Rezervácia termínu</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: red;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>{{ form.doctor.label }} {{ form.doctor }}</p>
+        <p>{{ form.date.label }} {{ form.date }}</p>
+        <p>{{ form.time.label }} {{ form.time }}</p>
+        <p>{{ form.description.label }} {{ form.description }}</p>
+        <p>{{ form.submit }}</p>
+    </form>
+{% endblock %}

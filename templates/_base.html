@@ -1,38 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZochovaMed</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
-<!-- NAVIGATION BAR -->
-<nav class="navbar">
-    <div class="title-and-logo" >
-        <a href="/"><img src="static\img\logo.png" alt="logo"></a>
-        <h1>
-            <a href="/">Zochova Medication</a>
-        </h1>
+    <div class="navbar">
+        <a href="{{ url_for('main_page') }}">Domov</a>
+        <a href="{{ url_for('news') }}">Novinky</a>
+        {% if current_user.is_authenticated %}
+            {% if current_user.role == 'pacient' %}
+                <a href="{{ url_for('reservation') }}">Rezervácia termínu</a>
+                <a href="{{ url_for('pickup') }}">Lieky na vyzdvihnutie</a>
+            {% elif current_user.role == 'doktor' %}
+                <a href="{{ url_for('confirm') }}">Potvrdenie termínu</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}">Odhlásiť sa</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Prihlásiť sa</a>
+        {% endif %}
     </div>
-
-    <ul>
-        <li><a href="/services">Services</a></li>
-        <li><a href="/doctors">Doctors</a></li>
-        <li><a href="/schedule">Schedule</a></li>
-        <li><a href="/news">News</a></li>
-    </ul>
-</nav>
-
-<main>
-    {% block content %}
-    {% endblock %}
-</main>
-
-<footer>
-    <p>© 2024 Zochova Medication | Všetky práva vyhradené.</p>
-</footer>
-
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>

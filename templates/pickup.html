@@ -1,0 +1,28 @@
+{% extends '_base.html' %}
+{% block content %}
+    <h1>Lieky na vyzdvihnutie</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: green;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    {% if sessions %}
+        {% for session in sessions %}
+            {% if session.medication and session.diagnosis %}
+                <div class="pickup-box">
+                    <p><strong>Liek:</strong> {{ session.medication }}</p>
+                    <p><strong>Diagnóza:</strong> {{ session.diagnosis }}</p>
+                    <form action="{{ url_for('pickup') }}" method="POST">
+                        <input type="hidden" name="session_id" value="{{ session.id }}">
+                        <button type="submit">Vyzdvihnuté</button>
+                    </form>
+                </div>
+                <hr>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>Žiadne lieky na vyzdvihnutie.</p>
+    {% endif %}
+{% endblock %}

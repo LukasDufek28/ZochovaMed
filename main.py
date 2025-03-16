@@ -20,14 +20,37 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 # Vytvorenie databázy a testovacích používateľov
+# Vytvorenie databázy a testovacích používateľov
 with app.app_context():
     db.create_all()
     if not User.query.filter_by(email="doktor@test.com").first():
-        doctor = User(firstname="Jan", lastname="Doktor", email="doktor@test.com", password_hash=generate_password_hash("heslo123"), role="doktor")
-        patient = User(firstname="Peter", lastname="Pacient", email="pacient@test.com", password_hash=generate_password_hash("heslo123"), role="pacient")
-        db.session.add(doctor)
-        db.session.add(patient)
+        # Pridanie doktorských účtov
+        doctors = [
+            User(firstname="Jan", lastname="Doktor", email="doktor@test.com", password_hash=generate_password_hash("heslo123"), role="doktor"),
+            User(firstname="Anna", lastname="Zdravotnik", email="anna.doktor@test.com", password_hash=generate_password_hash("heslo123"), role="doktor"),
+            User(firstname="Martin", lastname="Lekar", email="martin.doktor@test.com", password_hash=generate_password_hash("heslo123"), role="doktor"),
+            User(firstname="Eva", lastname="Doktorka", email="eva.doktor@test.com", password_hash=generate_password_hash("heslo123"), role="doktor"),
+        ]
+        
+        # Pridanie pacientskych účtov
+        patients = [
+            User(firstname="Peter", lastname="Pacient", email="pacient@test.com", password_hash=generate_password_hash("heslo123"), role="pacient"),
+            User(firstname="Jana", lastname="Pacientova", email="jana.pacient@test.com", password_hash=generate_password_hash("heslo123"), role="pacient"),
+            User(firstname="Viktor", lastname="Pacient", email="viktor.pacient@test.com", password_hash=generate_password_hash("heslo123"), role="pacient"),
+            User(firstname="Maria", lastname="Pacientka", email="maria.pacient@test.com", password_hash=generate_password_hash("heslo123"), role="pacient"),
+            User(firstname="Tomas", lastname="Pacient", email="tomas.pacient@test.com", password_hash=generate_password_hash("heslo123"), role="pacient"),
+            User(firstname="Sima", lastname="Pacientka", email="sima.pacient@test.com", password_hash=generate_password_hash("heslo123"), role="pacient"),
+            User(firstname="Ada", lastname="Pacientova", email="ada.pacient@test.com", password_hash=generate_password_hash("heslo123"), role="pacient"),
+            User(firstname="Filip", lastname="Pacient", email="filip.pacient@test.com", password_hash=generate_password_hash("heslo123"), role="pacient"),
+            User(firstname="Lara", lastname="Pacientka", email="lara.pacient@test.com", password_hash=generate_password_hash("heslo123"), role="pacient"),
+            User(firstname="Riso", lastname="Pacient", email="riso.pacient@test.com", password_hash=generate_password_hash("heslo123"), role="pacient"),
+            User(firstname="Barbora", lastname="Pacientka", email="barbora.pacient@test.com", password_hash=generate_password_hash("heslo123"), role="pacient"),
+        ]
+
+        # Uloženie všetkých používateľov do databázy
+        db.session.add_all(doctors + patients)
         db.session.commit()
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -77,19 +100,30 @@ def reservation():
         return redirect(url_for('main_page'))
     form = ReservationForm()
     form.doctor.choices = [(d.id, f"{d.firstname} {d.lastname}") for d in User.query.filter_by(role='doktor').all()]
+    
     if form.validate_on_submit():
         selected_date = form.date.data
         selected_time_str = form.time.data
+        selected_time = datetime.strptime(selected_time_str, '%H:%M').time()
+        selected_doctor_id = form.doctor.data
         today = datetime.now().date()
 
+        # Check if a session already exists with the same doctor, date, and time
+        existing_session = Session.query.filter_by(
+            doctor_id=selected_doctor_id,
+            date=selected_date,
+            time=selected_time
+        ).first()
+
         if selected_date < today:
-            flash('Nemôžete rezervovať termín v minulosti.')
+            flash('You cannot book a session in the past.')
         elif selected_date.weekday() >= 5:
-            flash('Rezervovať môžete iba pracovné dni (pondelok - piatok).')
+            flash('Sessions can only be booked on weekdays.')
+        elif existing_session:
+            flash('This time slot is already booked with the selected doctor.')
         else:
-            selected_time = datetime.strptime(selected_time_str, '%H:%M').time()
             session = Session(
-                doctor_id=form.doctor.data,
+                doctor_id=selected_doctor_id,
                 patient_id=current_user.id,
                 date=selected_date,
                 time=selected_time,
@@ -97,10 +131,8 @@ def reservation():
             )
             db.session.add(session)
             db.session.commit()
-            flash('Rezervácia odoslaná.')
-            form.date.data = None  # Vyčistenie formulára
-            form.time.data = ''
-            form.description.data = ''
+            flash('Your session has been successfully booked.')
+            return redirect(url_for('main_page'))
     return render_template('reservation.html', form=form)
 
 @app.route('/confirm', methods=['GET', 'POST'])

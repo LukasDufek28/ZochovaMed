@@ -1,19 +1,37 @@
 {% extends '_base.html' %}
+{% block body_class %}session-record-page{% endblock %}
 {% block content %}
-    <h1>Zápis zo sedenia</h1>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <p style="color: green;">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <p><strong>Pacient:</strong> {{ session.patient.firstname }} {{ session.patient.lastname }}</p>
-    <p><strong>Dátum:</strong> {{ session.date }} {{ session.time }}</p>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <p>{{ form.diagnosis.label }} {{ form.diagnosis }}</p>
-        <p>{{ form.medication.label }} {{ form.medication }}</p>
-        <p>{{ form.submit }}</p>
-    </form>
+    <h1 class="page-title">Zápis zo sedenia</h1>
+    
+    <div class="session-card reservation-card no-hover">
+        <div class="session-info-header">
+            <p class="session-patient"><strong>Pacient:</strong> {{ session.patient.firstname }} {{ session.patient.lastname }}</p>
+            <p class="session-datetime"><strong>Dátum:</strong> {{ session.date }} {{ session.time }}</p>
+        </div>
+        
+        <div class="alert-messages">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert-success">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        
+        <form method="POST" class="reservation-form">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label class="form-label">{{ form.diagnosis.label }}</label>
+                {{ form.diagnosis(class="form-input", rows=4) }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.medication.label }}</label>
+                {{ form.medication(class="form-input", rows=4) }}
+            </div>
+            <div class="form-submit">
+                {{ form.submit(class="submit-button") }}
+            </div>
+        </form>
+    </div>
 {% endblock %}

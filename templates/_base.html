@@ -4,22 +4,28 @@
     <meta charset="UTF-8">
     <title>ZochovaMed</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='enhanced_style.css') }}">
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
     <div class="navbar">
-        <a href="{{ url_for('main_page') }}">Domov</a>
-        <a href="{{ url_for('news') }}">Novinky</a>
-        {% if current_user.is_authenticated %}
-            {% if current_user.role == 'pacient' %}
-                <a href="{{ url_for('reservation') }}">Rezervácia termínu</a>
-                <a href="{{ url_for('pickup') }}">Lieky na vyzdvihnutie</a>
-            {% elif current_user.role == 'doktor' %}
-                <a href="{{ url_for('confirm') }}">Potvrdenie termínu</a>
-            {% endif %}
-            <a href="{{ url_for('logout') }}">Odhlásiť sa</a>
-        {% else %}
-            <a href="{{ url_for('login') }}">Prihlásiť sa</a>
-        {% endif %}
+        <div class="navbar-content">
+            <img src="{{ url_for('static', filename='IMG/logo.png') }}" alt="ZochovaMed Logo" class="navbar-logo">
+            <div class="navbar-links">
+                <a href="{{ url_for('main_page') }}">Domov</a>
+                <a href="{{ url_for('news') }}">Novinky</a>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.role == 'pacient' %}
+                        <a href="{{ url_for('reservation') }}">Rezervácia termínu</a>
+                        <a href="{{ url_for('pickup') }}">Lieky na vyzdvihnutie</a>
+                    {% elif current_user.role == 'doktor' %}
+                        <a href="{{ url_for('confirm') }}">Potvrdenie termínu</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}">Odhlásiť sa</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Prihlásiť sa</a>
+                {% endif %}
+            </div>
+        </div>
     </div>
     <div class="container">
         {% block content %}{% endblock %}

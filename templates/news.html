@@ -1,29 +1,39 @@
 {% extends '_base.html' %}
+{% block body_class %}news-page{% endblock %}
 {% block content %}
-    <h1>Novinky</h1>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <p style="color: green;">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+    <h1 class="page-title">Novinky</h1>
     {% if current_user.role == 'doktor' %}
-        <h2>Pridať nový článok</h2>
-        <form method="POST">
-            {{ form.hidden_tag() }}
-            <p>{{ form.title.label }} {{ form.title }}</p>
-            <p>{{ form.content.label }} {{ form.content }}</p>
-            <p>{{ form.submit }}</p>
-        </form>
-    {% endif %}
-    <h2>Články</h2>
-    {% for article in articles %}
-        <div class="article">
-            <h3>{{ article.title }}</h3>
-            <p>{{ article.content }}</p>
-            <p><em>Autor: {{ article.author.firstname }} {{ article.author.lastname }}</em></p>
+        <div class="add-article-box">
+            <h2 class="add-article-title">Pridať nový článok</h2>
+            <form method="POST" class="add-article-form">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <label class="form-label">{{ form.title.label }}</label>
+                    {{ form.title(class="form-input") }}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ form.content.label }}</label>
+                    {{ form.content(class="form-input", rows=5) }}
+                </div>
+                <div class="form-submit">
+                    {{ form.submit(class="submit-button") }}
+                </div>
+            </form>
         </div>
-        <hr>
-    {% endfor %}
+    {% endif %}
+    <div class="sessions-list">
+        {% for article in articles %}
+            <div class="session-card">
+                <div class="article-content">
+                    <h3>{{ article.title }}</h3>
+                    <p class="article-preview">{{ article.content[:100] }}{% if article.content|length > 100 %}...{% endif %}</p>
+                    <p class="article-author"><strong>Autor:</strong> {{ article.author.firstname }} {{ article.author.lastname }}</p>
+                    <a href="{{ url_for('article_detail', article_id=article.id) }}" class="article-link">Čítať viac</a>
+                    {% if current_user.role == 'doktor' %}
+                    <a href="{{ url_for('delete_article', article_id=article.id) }}" class="delete-article-button" onclick="return confirm('Naozaj chcete odstrániť tento článok?');">Odstrániť</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

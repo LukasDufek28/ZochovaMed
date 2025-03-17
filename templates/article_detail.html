@@ -1,0 +1,15 @@
+{% extends '_base.html' %}
+{% block body_class %}article-detail-page{% endblock %}
+{% block content %}
+    <h1 class="page-title">{{ article.title }}</h1>
+    
+    <div class="session-card article-detail-card">
+        <div class="article-content full-article">
+            <p class="article-full-content">{{ article.content }}</p>
+            <p class="article-author"><strong>Autor:</strong> {{ article.author.firstname }} {{ article.author.lastname }}</p>
+            <div class="article-actions">
+                <a href="{{ url_for('news') }}" class="back-link">Späť na novinky</a>
+            </div>
+        </div>
+    </div>
+{% endblock %} 

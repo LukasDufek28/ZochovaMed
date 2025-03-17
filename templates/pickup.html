@@ -1,28 +1,31 @@
 {% extends '_base.html' %}
+{% block body_class %}pickup-page{% endblock %}
 {% block content %}
-    <h1>Lieky na vyzdvihnutie</h1>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <p style="color: green;">{{ message }}</p>
+    <h1 class="page-title">Lieky na vyzdvihnutie</h1>
+    <div class="sessions-list">
+        {% if sessions %}
+            {% for session in sessions %}
+                {% if session.medication and session.diagnosis %}
+                    <div class="session-card pickup-card no-hover">
+                        <div class="pickup-content">
+                            <div class="pickup-info">
+                                <h3>Predpísaný liek</h3>
+                                <p class="pickup-diagnosis"><strong>Diagnóza:</strong> {{ session.diagnosis }}</p>
+                                <p class="pickup-medication"><strong>Liek:</strong> {{ session.medication }}</p>
+                                <p class="pickup-date"><strong>Dátum predpisu:</strong> {{ session.date }}</p>
+                            </div>
+                            <form action="{{ url_for('pickup') }}" method="POST" class="pickup-form">
+                                <input type="hidden" name="session_id" value="{{ session.id }}">
+                                <button type="submit" class="pickup-button">Vyzdvihnuté</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
             {% endfor %}
+        {% else %}
+            <div class="session-card no-hover">
+                <p class="no-pickup">Žiadne lieky na vyzdvihnutie.</p>
+            </div>
         {% endif %}
-    {% endwith %}
-    {% if sessions %}
-        {% for session in sessions %}
-            {% if session.medication and session.diagnosis %}
-                <div class="pickup-box">
-                    <p><strong>Liek:</strong> {{ session.medication }}</p>
-                    <p><strong>Diagnóza:</strong> {{ session.diagnosis }}</p>
-                    <form action="{{ url_for('pickup') }}" method="POST">
-                        <input type="hidden" name="session_id" value="{{ session.id }}">
-                        <button type="submit">Vyzdvihnuté</button>
-                    </form>
-                </div>
-                <hr>
-            {% endif %}
-        {% endfor %}
-    {% else %}
-        <p>Žiadne lieky na vyzdvihnutie.</p>
-    {% endif %}
+    </div>
 {% endblock %}

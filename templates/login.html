@@ -1,13 +1,14 @@
 {% extends '_base.html' %}
+{% block body_class %}login-page{% endblock %}
 {% block content %}
     <h1>Prihlásenie</h1>
     <form method="POST">
         <p>
-            <label for="email">Email:</label><br>
+            <label for="email">Email:</label>
             <input type="email" name="email" id="email" required>
         </p>
         <p>
-            <label for="password">Heslo:</label><br>
+            <label for="password">Heslo:</label>
             <input type="password" name="password" id="password" required>
         </p>
         <p>

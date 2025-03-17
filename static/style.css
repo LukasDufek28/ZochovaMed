@@ -1,29 +1,74 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px;
-    background-color: #f4f4f4;
+    background-color: #f0f7ff; /* Light blue background */
+    background-image: url('IMG/background.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
 .navbar {
-    background-color: #333;
-    padding: 10px;
+    background-color: #0066cc; /* Professional medical blue */
+    padding: 15px 30px; /* Increased padding */
     color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: 70px; /* Set fixed height for bigger navbar */
+}
+
+.navbar-content {
+    display: flex;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 100%;
+    position: relative; /* Added for absolute positioning of logo */
+}
+
+.navbar-logo {
+    height: 100px; /* Increased logo size */
+    width: auto;
+    position: absolute; /* Position absolutely */
+    left: 0; /* Align to the very left */
+}
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    margin-left: 200px; /* Add margin to move links away from logo */
 }
 
 .navbar a {
     color: white;
-    margin-right: 15px;
+    margin-right: 20px;
     text-decoration: none;
+    padding: 25px 35px; /* Increased padding for bigger buttons */
+    border-radius: 6px;
+    transition: background-color 0.3s;
+    font-size: 18px; /* Increased font size from 18px to 20px */
+    font-weight: 500; /* Made text slightly bolder */
+    display: inline-block; /* Ensures padding works properly */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle white outline with low opacity */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1); /* Very subtle glow effect */
+}
+
+.navbar a:hover {
+    background-color: #0052a3;
+    color: white;
+    transform: translateY(-5px); /* Slight lift effect on hover */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow on hover */
+    border-color: rgba(255, 255, 255, 0.4); /* Increase border opacity on hover */
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 20px auto;
     padding: 20px;
     background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
 }
 
 button {
@@ -41,4 +86,387 @@ button:hover {
 
 form {
     margin-top: 20px;
+}
+
+/* Styles for sessions list */
+.sessions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.session-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 102, 204, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #ffffff;
+}
+
+.session-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 102, 204, 0.25);
+}
+
+.no-hover:hover {
+    transform: none !important;
+    box-shadow: 0 4px 10px rgba(0, 102, 204, 0.2) !important;
+}
+
+.session-info {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+    display: flex;
+    gap: 20px;
+}
+
+.session-date, .session-time, .session-doctor {
+    padding: 8px 15px;
+    background-color: #b3d7ff;
+    border-radius: 6px;
+    display: inline-block;
+    border: 1px solid #0066cc;
+}
+
+.session-doctor {
+    font-weight: 500;
+}
+
+.session-link {
+    background-color: #0066cc;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.session-link:hover {
+    background-color: #0052a3;
+}
+
+.page-title {
+    color: #0066cc;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+/* Article styles */
+.article-content {
+    width: 100%;
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.article-content h3 {
+    color: #000000;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 22px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.article-content p {
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.article-preview {
+    color: #333;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.article-link {
+    display: inline-block;
+    background-color: #0066cc;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-top: 10px;
+    font-family: Arial, sans-serif; /* Reset to normal font */
+}
+
+.article-link:hover {
+    background-color: #0052a3;
+    transform: translateY(-2px);
+}
+
+.delete-article-button {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-top: 10px;
+    margin-left: 10px;
+    font-family: Arial, sans-serif; /* Reset to normal font */
+}
+
+.delete-article-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.article-detail-card {
+    padding: 30px;
+}
+
+.full-article {
+    font-size: 18px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.article-full-content {
+    white-space: pre-line;
+    line-height: 1.6;
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.article-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.back-link {
+    display: inline-block;
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.back-link:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+.article-author {
+    font-size: 16px;
+    color: #555;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+/* Reservation form styles */
+.reservation-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 30px;
+}
+
+.reservation-form {
+    width: 100%;
+    font-size: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #0066cc;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+.form-submit {
+    margin-top: 30px;
+}
+
+.submit-button {
+    background-color: #0066cc;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.submit-button:hover {
+    background-color: #0052a3;
+    transform: translateY(-2px);
+}
+
+.alert-messages {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.alert-message {
+    color: #d9534f;
+    background-color: #f9eaea;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border-left: 4px solid #d9534f;
+    margin-bottom: 10px;
+}
+
+.alert-success {
+    color: #28a745;
+    background-color: #e8f5e9;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border-left: 4px solid #28a745;
+    margin-bottom: 10px;
+}
+
+.session-info-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9ecef;
+    width: 100%;
+}
+
+.session-patient, .session-datetime {
+    font-size: 18px;
+    margin: 8px 0;
+}
+
+/* Add article box styles */
+.add-article-box {
+    background-color: white;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 10px rgba(0, 102, 204, 0.2);
+    border-left: 5px solid #0066cc;
+}
+
+.add-article-title {
+    color: #0066cc;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.add-article-form .form-label {
+    color: #000000;
+}
+
+.add-article-form textarea.form-input {
+    min-height: 150px;
+    resize: vertical;
+}
+
+/* Pickup styles */
+.pickup-card {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.pickup-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pickup-info {
+    flex-grow: 1;
+}
+
+.pickup-info h3 {
+    color: #0066cc;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 22px;
+}
+
+.pickup-diagnosis, .pickup-medication, .pickup-date {
+    font-size: 16px;
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.pickup-form {
+    margin-top: 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.pickup-button {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.pickup-button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.no-pickup {
+    font-size: 18px;
+    color: #6c757d;
+    text-align: center;
+    width: 100%;
+    padding: 20px 0;
+}
+
+/* No sessions message styles */
+.no-sessions-message {
+    width: 100%;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.no-sessions-message p {
+    font-size: 18px;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.reservation-button {
+    display: inline-block;
+    background-color: #0066cc;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 16px;
+    margin-top: 15px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.reservation-button:hover {
+    background-color: #0052a3;
+    transform: translateY(-2px);
 }

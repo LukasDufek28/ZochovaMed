@@ -1,28 +1,20 @@
 {% extends '_base.html' %}
 {% block body_class %}reservation-page{% endblock %}
 {% block content %}
-    <h1 class="page-title">Rezervácia termínu</h1>
-        <form method="POST" class="reservation-form">
-            {{ form.hidden_tag() }}
-            <div class="form-group">
-                {{ form.doctor.label(class="form-label") }} 
-                {{ form.doctor(class="form-input") }}
-            </div>
-            <div class="form-group">
-                {{ form.date.label(class="form-label") }} 
-                {{ form.date(class="form-input") }}
-            </div>
-            <div class="form-group">
-                {{ form.time.label(class="form-label") }} 
-                {{ form.time(class="form-input") }}
-            </div>
-            <div class="form-group">
-                {{ form.description.label(class="form-label") }} 
-                {{ form.description(class="form-input") }}
-            </div>
-            <div class="form-submit">
-                {{ form.submit(class="submit-button") }}
-            </div>
-        </form>
-    </div>
+<h1>Book a Session</h1>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: red;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>{{ form.doctor.label }} {{ form.doctor }}</p>
+    <p>{{ form.date.label }} {{ form.date }}</p>
+    <p>{{ form.time.label }} {{ form.time }}</p>
+    <p>{{ form.description.label }} {{ form.description }}</p>
+    <p>{{ form.submit }}</p>
+</form>
 {% endblock %}

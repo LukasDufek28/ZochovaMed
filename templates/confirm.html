@@ -2,13 +2,6 @@
 {% block body_class %}confirm-page{% endblock %}
 {% block content %}
     <h1>Potvrdenie termínov</h1>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <p style="color:red;">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
     {% if sessions %}
         {% for session in sessions %}
             <div class="session-box">

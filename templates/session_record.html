@@ -9,16 +9,6 @@
             <p class="session-datetime"><strong>Dátum:</strong> {{ session.date }} {{ session.time }}</p>
         </div>
         
-        <div class="alert-messages">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert-success">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-        </div>
-        
         <form method="POST" class="reservation-form">
             {{ form.hidden_tag() }}
             <div class="form-group">

@@ -405,17 +405,26 @@ body.reservation-page {
 
 .reservation-page .form-input {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #e0e0e0;
     border-radius: 4px;
     font-size: 16px;
     transition: all 0.3s;
+    background-color: #fff;
 }
 
 .reservation-page .form-input:focus {
     outline: none;
     border-color: #4472c4;
     box-shadow: 0 0 0 2px rgba(68, 114, 196, 0.1);
+}
+
+.reservation-page .form-group {
+    margin-bottom: 20px;
+}
+
+.reservation-page .form-group:last-child {
+    margin-bottom: 30px;
 }
 
 .reservation-page .submit-button {
@@ -786,4 +795,4 @@ body.confirm-page {
     background-color: #7d98c9;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(142, 170, 219, 0.1);
-} 
+}
